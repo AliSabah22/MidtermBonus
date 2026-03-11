@@ -12,12 +12,16 @@ export default function PostsListScreen({ navigation }) {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const addPost = (newPost) => {
+    setPosts((prev) => [newPost, ...prev]);
+  };
+
   useEffect(() => {
     navigation.setOptions({
       title: 'Posts',
       headerRight: () => (
         <TouchableOpacity
-          onPress={() => navigation.navigate('CreatePost')}
+          onPress={() => navigation.navigate('CreatePost', { onPostCreated: addPost })}
           style={styles.addButton}
         >
           <Text style={styles.addButtonText}>+</Text>

@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
-  View,
   Text,
   TextInput,
   TouchableOpacity,
@@ -11,10 +10,12 @@ import {
   ScrollView,
 } from 'react-native';
 
-export default function CreatePostScreen({ navigation }) {
+export default function CreatePostScreen({ navigation, route }) {
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
   const [submitting, setSubmitting] = useState(false);
+
+  const onPostCreated = route.params?.onPostCreated;
 
   const handleSubmit = () => {
     if (!title.trim() || !body.trim()) {
@@ -32,11 +33,12 @@ export default function CreatePostScreen({ navigation }) {
       .then((res) => res.json())
       .then((data) => {
         setSubmitting(false);
+        if (onPostCreated) onPostCreated(data);
         Alert.alert('Success', 'Post created successfully!', [
           { text: 'OK', onPress: () => navigation.goBack() },
         ]);
       })
-      .catch((err) => {
+      .catch(() => {
         setSubmitting(false);
         Alert.alert('Error', 'Failed to create post.');
       });
@@ -111,7 +113,7 @@ const styles = StyleSheet.create({
     height: 160,
   },
   submitButton: {
-    backgroundColor: '#444',
+    backgroundColor: '#007AFF',
     borderRadius: 6,
     paddingVertical: 14,
     alignItems: 'center',
